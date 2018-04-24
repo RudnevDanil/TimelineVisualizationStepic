@@ -98,22 +98,55 @@ d3.csv("dji.csv", function(error, csv) {
   function mouseover(d) {
 	tooltip.style("visibility", "visible");
 	var percent_data = (data[d] !== undefined) ? percent(data[d]) : percent(0);
-	var purchase_text = d + ": " + percent_data;//i'm here
+	var purchase_text = d + ": " + percent_data;
 
 	tooltip.transition()        
 				.duration(200)      
 				.style("opacity", .9);      
 	tooltip.html(purchase_text)  
-				.style("left", (d3.event.pageX)+30 + "px")     
-				.style("top", (d3.event.pageY) + "px"); 
-	  
-	//border, max and min will be here
+				.style("left", (d3.event.pageX)+ 80 + "px")     
+				.style("top", (d3.event.pageY) + 30 + "px"); 
+	/*
+	// make all rect green  
+	d3.select("#chart").selectAll("svg").select("g").selectAll("rect")
+		.style("fill", "green");*/
+	 
+	// make all rect transparent  
+	d3.select("#chart").selectAll("svg").select("g").selectAll("rect")
+	    .style("opacity", "0.2");
 	
+	d3.select(this)
+		.style("opacity", "1");
+	  	
+	  var ourObj = this;
+	  var mydate = new Date(d);
+	  mydate = mydate.getDay();
+	  
+	  d3.select(ourObj)
+		.style("opacity", "1");
+	  
+	  for (var i = mydate; i < 6; i++) {
+		  ourObj = ourObj.nextSibling;
+		  d3.select(ourObj)
+			  .style("opacity", "1");
+	  }
+	  ourObj = this;
+	  for (var i = 0; i < mydate; i++) {
+		  ourObj = ourObj.previousSibling;
+		  d3.select(ourObj)
+			  .style("opacity", "1");
+	  }
+	  														//WORKPOINT
   }
   function mouseout (d) {
 	tooltip.transition()        
 			.duration(500)      
 			.style("opacity", 0); 
+	  
+	// make all rect non transparent  
+	d3.select("#chart").selectAll("svg").select("g").selectAll("rect")
+	    .style("opacity", "1");
+	  
 	var $tooltip = $("#tooltip");
 	$tooltip.empty();
   }
