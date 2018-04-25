@@ -95,17 +95,8 @@ d3.csv("dji.csv", function(error, csv) {
   //  Tooltip
   rect.on("mouseover", mouseover);
   rect.on("mouseout", mouseout);
-  function mouseover(d) {
-	tooltip.style("visibility", "visible");
-	var percent_data = (data[d] !== undefined) ? percent(data[d]) : percent(0);
-	var purchase_text = d + ": " + percent_data;
-
-	tooltip.transition()        
-				.duration(200)      
-				.style("opacity", .9);      
-	tooltip.html(purchase_text)  
-				.style("left", (d3.event.pageX)+ 80 + "px")     
-				.style("top", (d3.event.pageY) + 30 + "px"); 
+  function mouseover(d) 
+  { 
 	 
 	// make all rect transparent  
 	d3.select("#chart").selectAll("svg").select("g").selectAll("rect")
@@ -201,6 +192,17 @@ d3.csv("dji.csv", function(error, csv) {
 			  .style("fill", "darkgreen");
 	  d3.select(min_data_obj)
 			  .style("fill", "darkred");
+	  
+	  	tooltip.style("visibility", "visible");
+		var percent_data = (data[d] !== undefined) ? percent(data[d]) : percent(0);
+		var purchase_text = d + ": " + percent_data + ", at week max: " + max_data + " min: " + min_data;
+
+		tooltip.transition()        
+					.duration(200)      
+					.style("opacity", .9);      
+		tooltip.html(purchase_text)  
+					.style("left", (d3.event.pageX)+ 80 + "px")     
+					.style("top", (d3.event.pageY) + 30 + "px");
   }
   function mouseout (d) 
   {
