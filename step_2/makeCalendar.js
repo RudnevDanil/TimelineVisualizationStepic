@@ -106,39 +106,104 @@ d3.csv("dji.csv", function(error, csv) {
 	tooltip.html(purchase_text)  
 				.style("left", (d3.event.pageX)+ 80 + "px")     
 				.style("top", (d3.event.pageY) + 30 + "px"); 
-	/*
-	// make all rect green  
-	d3.select("#chart").selectAll("svg").select("g").selectAll("rect")
-		.style("fill", "green");*/
 	 
 	// make all rect transparent  
 	d3.select("#chart").selectAll("svg").select("g").selectAll("rect")
-	    .style("opacity", "0.2");
+	    .style("opacity", "0.4");
 	
 	d3.select(this)
 		.style("opacity", "1");
 	  	
+	  var max_data = percent(-1);
+	  var max_data_obj = this;
+	  var min_data = percent(1);
+	  var min_data_obj = this;
 	  var ourObj = this;
 	  var mydate = new Date(d);
-	  mydate = mydate.getDay();
+	  mydate_int = mydate.getDay();
+	  
+	  /*var some_str = ((new Date("Nov 26 2008")).toISOString()).substring(0,10);
+	  alert(data[d] + "_______" + d + "_______" + data[some_str] + "_______" + some_str);*/
+	  
+	  var tomorrow = new Date(d);
+	  tomorrow.setDate(tomorrow.getDate()+1);
+	  tomorrow = tomorrow.toISOString().substring(0,10);
 	  
 	  d3.select(ourObj)
 		.style("opacity", "1");
-	  
-	  for (var i = mydate; i < 6; i++) {
+	  var percentInData = ((data[d] !== undefined) ? percent(data[d]) : percent(0));
+	  if(parseFloat(max_data) < parseFloat(percentInData))
+	  {
+		  max_data = percentInData;
+		  max_data_obj = ourObj;
+	  }
+	  if(parseFloat(min_data) > parseFloat(percentInData))
+	  {
+		  min_data = percentInData;
+		  min_data_obj = ourObj;
+	  }
+	  var j = 1;
+	  for (var i = mydate_int; i < 6; i++) 
+	  {
 		  ourObj = ourObj.nextSibling;
+		  if(ourObj == undefined)
+			  break;
 		  d3.select(ourObj)
 			  .style("opacity", "1");
+		  
+		  var tomorrow = new Date(d);
+		  tomorrow.setDate(tomorrow.getDate()+j);
+		  tomorrow = tomorrow.toISOString().substring(0,10);
+		  j++;
+		  
+		  
+		  percentInData = ((data[tomorrow] !== undefined) ? percent(data[tomorrow]) : percent(0));
+		  if(parseFloat(max_data) < parseFloat(percentInData))
+		  {
+			  max_data = percentInData;
+			  max_data_obj = ourObj;
+		  }
+		  if(parseFloat(min_data) > parseFloat(percentInData))
+		  {
+			  min_data = percentInData;
+			  min_data_obj = ourObj;
+		  }
 	  }
 	  ourObj = this;
-	  for (var i = 0; i < mydate; i++) {
+	  j = 1;
+	  for (var i = 0; i < mydate_int; i++) 
+	  {
 		  ourObj = ourObj.previousSibling;
+		  if(ourObj == undefined)
+			  break;
 		  d3.select(ourObj)
 			  .style("opacity", "1");
+		  
+		  var tomorrow = new Date(d);
+		  tomorrow.setDate(tomorrow.getDate()-j);
+		  tomorrow = tomorrow.toISOString().substring(0,10);
+		  j++;
+		  
+		  percentInData = ((data[tomorrow] !== undefined) ? percent(data[tomorrow]) : percent(0));
+		  if(parseFloat(max_data) < parseFloat(percentInData))
+		  {
+			  max_data = percentInData;
+			  max_data_obj = ourObj;
+		  }
+		  if(parseFloat(min_data) > parseFloat(percentInData))
+		  {
+			  min_data = percentInData;
+			  min_data_obj = ourObj;
+		  }
 	  }
-	  														//WORKPOINT
+	  
+	  d3.select(max_data_obj)
+			  .style("fill", "darkgreen");
+	  d3.select(min_data_obj)
+			  .style("fill", "darkred");
   }
-  function mouseout (d) {
+  function mouseout (d) 
+  {
 	tooltip.transition()        
 			.duration(500)      
 			.style("opacity", 0); 
@@ -146,7 +211,6 @@ d3.csv("dji.csv", function(error, csv) {
 	// make all rect non transparent  
 	d3.select("#chart").selectAll("svg").select("g").selectAll("rect")
 	    .style("opacity", "1");
-	  
 	var $tooltip = $("#tooltip");
 	$tooltip.empty();
   }
