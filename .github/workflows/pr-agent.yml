@@ -1,0 +1,15 @@
+name: PR-Agent
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr_agent:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up PR-Agent
+        uses: CodiumAI/pr-agent@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_AGENT_MODEL: "huggingface/HuggingFaceH4/zephyr-7b-beta"
